@@ -18,7 +18,7 @@
             <div class="fauna-content">
                 <img src="../assets/olatz.png" alt="Fauna" class="fauna-image">
                 <p class="fauna-text">  
-                    <b>Fauna:</b> The second fairy, on the other hand, specializes in colored illustrations using markers of all brands and types, both water-based and alcohol-based.<br><br>  
+                    <b>Fauna:</b> The second fairy, on the other hand, specializes in colored illustrations <br> using markers of all brands and types,<br> both water-based and alcohol-based.<br>  
                     She pays great attention to the details of clothing, as she studied fashion design.<br><br>  
                     Her works are usually colorful and dynamic, closely resembling the Japanese manga style.  
                 </p>
@@ -40,30 +40,38 @@
 </main>
 </template>
 
-
 <style scoped>
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem 2rem;
+}
 /* Configuración general de cada fila */
+
 .flora-content,
 .fauna-content,
 .merryweather-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70%; 
+  width: 100%; 
   gap: 10rem;
+  color: white;
+  margin-bottom: 7rem;
+  text-align: center;
 }
 
 /* Flora y Merryweather alineados con imagen a la izquierda */
 .flora-content,
 .merryweather-content {
   flex-direction: row; 
-  margin-left: 20rem;
 }
 
 /* Fauna alineada con imagen a la derecha */
 .fauna-content {
   flex-direction: row-reverse; 
-  margin-left: 20rem;
 }
 
 /* Ajuste de imágenes */
@@ -79,7 +87,7 @@
 .merryweather-text,
 .fauna-text {
   text-align: left; 
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   max-width: 700px;
 }
 
@@ -92,4 +100,5 @@
 .fauna-text {
   text-align: right; 
 }
+
 </style>

@@ -10,31 +10,31 @@
   
   </script>
   
-  <style scoped>
+  <style>
   @import url('https://fonts.googleapis.com/css?family=Oswald');
   
   .clouds {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    opacity: 0.4;
-  }
-  
-  .clouds-1,
-  .clouds-2,
-  .clouds-3 {
-    background-repeat: repeat-x;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 500px;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;      
+  height: 80vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;    
+  pointer-events: none;
+}
+
+.clouds-1,
+.clouds-2,
+.clouds-3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;      
+  height: 500px;
+  background-repeat: repeat-x;
+}
   .clouds-1 {
     background-image: url('https://s.cdpn.io/15514/clouds_2.png');
     animation: clouds-loop-1 20s infinite linear;
