@@ -42,5 +42,7 @@ Este portfolio está desarrollado con:
 ## 🛠️ Instalación y ejecución local
 
 1.Clonar el repo
+
 2.Instala Vue con npm install -g @vue/cli
+
 3.Abre el servidor con npm run dev
