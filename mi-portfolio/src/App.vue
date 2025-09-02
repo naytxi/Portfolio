@@ -10,117 +10,151 @@
         <button class="hamburger" @click="toggleMenu">&#9776;</button>
         <div class="submenu" v-if="menuOpen">
           <ul class="menu">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Works</a></li>
-            <li><a href="#">Support</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a @click.prevent="scrollToSection('home')">Home</a></li>
+            <li><a @click.prevent="scrollToSection('aboutSection')">About</a></li>
+            <li><a @click.prevent="scrollToSection('worksSection')">Works</a></li>
+            <li><a @click.prevent="scrollToSection('supportSection')">Support</a></li>
+            <li><a @click.prevent="scrollToSection('contactSection')">Contact</a></li>
           </ul>
         </div>
       </div>
     </section>
 
-  <Fog :style="{ opacity: fogOpacity }" />
+    <Fog :style="{ opacity: fogOpacity }" />
 
-    <section class="next-section" ref="aboutSection" :class="{ visible: aboutVisible }">
+    <section
+      class="next-section"
+      ref="aboutSection"
+      :class="{ visible: aboutVisible }"
+    >
       <h2 class="title">ABOUT</h2>
       <About />
     </section>
 
-
-    <section class="works-section" ref="worksSection" :class="{ visible: worksVisible }">
+    <section
+      class="works-section"
+      ref="worksSection"
+      :class="{ visible: worksVisible }"
+    >
       <h2 class="title">WORKS</h2>
       <Works />
     </section>
 
-    <section class="contact-section" ref="contactSection" :class="{ visible: contactVisible }">
+    <section
+      class="contact-section"
+      ref="contactSection"
+      :class="{ visible: contactVisible }"
+    >
       <h2 class="title">CONTACT</h2>
       <Contact />
     </section>
 
-    <section class="support-section" ref="supportSection" :class="{ visible: supportVisible }">
+    <section
+      class="support-section"
+      ref="supportSection"
+      :class="{ visible: supportVisible }"
+    >
       <Support @stopRain="stopRain" @resumeRain="resumeRain" />
     </section>
+
     <RainEffect v-if="showRain" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import RainEffect from "./components/Rain.vue";
 import About from "./components/AboutMe.vue";
 import Clouds from "./components/Clouds.vue";
 import Works from "./components/Works.vue";
-import Fog from './components/Fog.vue';
-import Contact from './components/Contact.vue';
+import Fog from "./components/Fog.vue";
+import Contact from "./components/Contact.vue";
 import Support from "./components/Support.vue";
 
+// refs para las secciones
+const aboutSection = ref(null);
+const worksSection = ref(null);
+const contactSection = ref(null);
+const supportSection = ref(null);
 
+// estado del menú
 const menuOpen = ref(false);
-const cloudsOpacity = ref(0.5); // Opacidad de las nubes
-const fogOpacity = ref(0.3); // Opacidad de la niebla
+const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 
-// Controlar el estado del menú
-const toggleMenu = () => {
-  menuOpen.value = !menuOpen.value;
-};
+// opacidad de nubes/niebla
+const cloudsOpacity = ref(0.5);
+const fogOpacity = ref(0.3);
 
-// Manejo del scroll para cambiar la opacidad de las nubes y la niebla
-const handleScroll = () => {
-  const scrollPosition = window.scrollY; // Posición del scroll vertical
-  const opacityFactor = Math.max(0, Math.min(0.5, 0.5 - scrollPosition / 500));
-
-  // Ajustar las opacidades de las nubes y la niebla
-  cloudsOpacity.value = opacityFactor;
-  fogOpacity.value = opacityFactor;
-};
-
+// control de visibilidad de secciones
 const aboutVisible = ref(false);
 const worksVisible = ref(false);
 const contactVisible = ref(false);
 const supportVisible = ref(false);
+
+// lluvia
 const showRain = ref(true);
+const stopRain = () => (showRain.value = false);
+const resumeRain = () => (showRain.value = true);
 
-const stopRain = () => showRain.value = false;
-const resumeRain = () => showRain.value = true;
+// efecto scroll para opacidades
+const handleScroll = () => {
+  const scrollPosition = window.scrollY;
+  const opacityFactor = Math.max(0, Math.min(0.5, 0.5 - scrollPosition / 500));
+  cloudsOpacity.value = opacityFactor;
+  fogOpacity.value = opacityFactor;
+};
 
+// función para hacer scroll suave
+const scrollToSection = (sectionRefName) => {
+  if (sectionRefName === "home") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    menuOpen.value = false;
+    return;
+  }
 
+  const sections = {
+    aboutSection: aboutSection.value,
+    worksSection: worksSection.value,
+    contactSection: contactSection.value,
+    supportSection: supportSection.value,
+  };
 
+  const section = sections[sectionRefName];
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth" });
+    menuOpen.value = false;
+  }
+};
+
+// observadores para animación de entrada
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
 
-  const observeVisibility = (selector, callback) => {
-    const element = document.querySelector(selector);
+  const observeVisibility = (element, callback) => {
     if (!element) return;
-
     const observer = new IntersectionObserver(
-    ([entry]) => {
-      callback(entry.isIntersecting); 
-    },
-    {
-      threshold: 0.1
-    }
-  );
-
+      ([entry]) => callback(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
     observer.observe(element);
   };
 
-  observeVisibility(".next-section", isVisible => aboutVisible.value = isVisible);
-  observeVisibility(".works-section", isVisible => worksVisible.value = isVisible);
-  observeVisibility(".contact-section", isVisible => contactVisible.value = isVisible);
-  observeVisibility(".support-section", isVisible => supportVisible.value = isVisible);
+  observeVisibility(aboutSection.value, (isVisible) => (aboutVisible.value = isVisible));
+  observeVisibility(worksSection.value, (isVisible) => (worksVisible.value = isVisible));
+  observeVisibility(contactSection.value, (isVisible) => (contactVisible.value = isVisible));
+  observeVisibility(supportSection.value, (isVisible) => (supportVisible.value = isVisible));
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
 });
-
 </script>
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&display=swap");
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow-x: auto;
@@ -141,20 +175,19 @@ html, body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center;    
-  margin: 0 auto;   
-  z-index: 2;  
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  z-index: 2;
 }
-
 
 .content {
   z-index: 2;
   margin-bottom: 5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center;  
+  justify-content: center;
+  align-items: center;
 }
 
 .logo {
@@ -195,7 +228,7 @@ html, body {
   transition: 1s;
 }
 
-.hamburger:hover{
+.hamburger:hover {
   background-color: #f5ede1;
   opacity: 0.2;
   transform: scale(0.8);
@@ -209,7 +242,6 @@ html, body {
   border-radius: 10px;
   padding: 1rem;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-
 }
 
 .submenu .menu {
@@ -231,16 +263,16 @@ html, body {
 .menu a {
   color: #f5ede1;
   text-decoration: none;
-  display: inline-block; 
-  padding: 10px; 
-  transition: transform 0.3s ease; 
+  display: inline-block;
+  padding: 10px;
+  transition: transform 0.3s ease;
 }
 
 .menu a:hover {
   transform: scale(1.1);
 }
 
-/* Transición de entrada */
+/* Animación de entrada */
 .next-section,
 .works-section,
 .contact-section,
@@ -253,10 +285,64 @@ html, body {
 .next-section.visible,
 .works-section.visible,
 .contact-section.visible,
-.support-section.visible{
+.support-section.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-</style>
+/* Responsivo */
+@media (max-width: 768px) {
+  .logo {
+    width: 8rem;
+    margin-bottom: 1rem;
+  }
 
+  .title {
+    font-size: 2rem;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .hamburger {
+    top: 2rem;
+    right: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .submenu {
+    top: 6rem;
+    right: 2rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .logo {
+    width: 12rem;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .description {
+    font-size: 1.3rem;
+  }
+
+  .hamburger {
+    top: 3rem;
+    right: 3rem;
+    font-size: 1.8rem;
+  }
+
+  .submenu {
+    top: 8rem;
+    right: 3rem;
+  }
+}
+</style>

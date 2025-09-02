@@ -1,4 +1,3 @@
-
 <template>
 <main class="container">
     <div class="logomain"></div>
@@ -41,14 +40,13 @@
 </template>
 
 <style scoped>
-
 .container{
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 5rem 2rem;
 }
-/* Configuración general de cada fila */
+
 
 .flora-content,
 .fauna-content,
@@ -63,18 +61,17 @@
   text-align: center;
 }
 
-/* Flora y Merryweather alineados con imagen a la izquierda */
+
 .flora-content,
 .merryweather-content {
   flex-direction: row; 
 }
 
-/* Fauna alineada con imagen a la derecha */
+
 .fauna-content {
   flex-direction: row-reverse; 
 }
 
-/* Ajuste de imágenes */
 .flora-image,
 .fauna-image,
 .merryweather-image {
@@ -82,7 +79,7 @@
   height: auto;
 }
 
-/* Ajuste de textos */
+
 .flora-text,
 .merryweather-text,
 .fauna-text {
@@ -101,4 +98,28 @@
   text-align: right; 
 }
 
+@media (max-width: 768px) {
+  .flora-content,
+  .fauna-content,
+  .merryweather-content {
+    flex-direction: column; 
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .flora-text,
+  .fauna-text,
+  .merryweather-text {
+    text-align: center; 
+    font-size: 1.2rem;
+    max-width: 90%;
+  }
+
+  .flora-image,
+  .fauna-image,
+  .merryweather-image {
+    width: 100%;
+    max-width: 350px; 
+  }
+}
 </style>
